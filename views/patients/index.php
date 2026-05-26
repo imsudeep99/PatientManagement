@@ -1,9 +1,102 @@
+<!-- <style>
+.btn-primary:hover {
+    background-color: #013063ff !important;
+    border-color: #004a99 !important;
+}
+
+<style>.table th {
+    font-size: 12px;
+    white-space: nowrap;
+    background: #f8f9fa;
+}
+
+.table td {
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.table td,
+.table th {
+    padding: 10px 8px;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.badge-custom {
+    font-size: 11px;
+    padding: 4px 6px;
+}
+
+.action-btns .btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+.text-truncate-custom {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+</style> -->
+
 <style>
 .btn-primary:hover {
     background-color: #013063ff !important;
     border-color: #004a99 !important;
 }
+
+/* Table Design */
+.table {
+    border-collapse: collapse !important;
+}
+
+.table th {
+    font-size: 12px;
+    white-space: nowrap;
+    background: #f1f3f5;
+    border: 1px solid #dee2e6 !important;
+}
+
+.table td {
+    font-size: 13px;
+    vertical-align: middle;
+    border: 1px solid #dee2e6 !important;
+}
+
+.table td,
+.table th {
+    padding: 10px 8px;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Responsive */
+.table-responsive {
+    overflow-x: auto;
+}
+
+/* Buttons */
+.action-btns .btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 4px;
+}
+
+/* Truncate long text */
+.text-truncate-custom {
+    max-width: 150px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 </style>
+
 
 <?php
 require_once __DIR__ . '/../../config.php';
@@ -100,23 +193,66 @@ foreach ($patients as $p) {
             onclick="return confirm(\'Are you sure?\');">Delete</a>'
         : '<button class="btn btn-sm btn-secondary" disabled title="Only allowed within 48 hours">Delete</button>';
 
-    $rows .= '<tr>
-        <td>'.$i++.'</td>
-        <td>'.htmlspecialchars($p['name']).'</td>
-        <td>'.htmlspecialchars($p['age']).'</td>
-        <td>'.htmlspecialchars($p['gender']).'</td>
-        <td>'.htmlspecialchars($p['contact']).'</td>
-        <td>'.htmlspecialchars($ref).'</td>
-        <td>'.htmlspecialchars($p['fees']).'</td>
-        <td>'.htmlspecialchars(date("d-m-Y", strtotime($p["created_at"]))).'</td>
-        <td>
-            <a href="/patient_system_modern/views/patients/view_patient.php?id='.$p['id'].'" 
-               class="btn btn-sm btn-primary">View</a>
+    // $rows .= '<tr>
+    //     <td>'.$i++.'</td>
+    //     <td>'.htmlspecialchars($p['name']).'</td>
+    //     <td>'.htmlspecialchars($p['age']).'</td>
+    //     <td>'.htmlspecialchars($p['gender']).'</td>
+    //     <td>'.htmlspecialchars($p['contact']).'</td>
+    //     <td>'.htmlspecialchars($ref).'</td>
+    //     <td>'.htmlspecialchars($p['fees']).'</td>
+    //     <td>'.htmlspecialchars(date("d-m-Y", strtotime($p["created_at"]))).'</td>
+    //     <td>
+    //         <a href="/patient_system_modern/views/patients/view_patient.php?id='.$p['id'].'" 
+    //            class="btn btn-sm btn-primary">View</a>
 
-            '.$editBtn.'
-            '.$deleteBtn.'
-        </td>
-    </tr>';
+    //         '.$editBtn.'
+    //         '.$deleteBtn.'
+    //     </td>
+    // </tr>';
+
+            $rows .= '<tr>
+            <td>'.$i++.'</td>
+
+            <td>'.htmlspecialchars(date("d-m-Y", strtotime($p["created_at"]))).'</td>
+
+            <td>'.htmlspecialchars($p['name']).'</td>
+
+            <td>'.htmlspecialchars($p['age'].' / '.$p['gender']).'</td>
+
+            <td>'.htmlspecialchars($p['receipt_no'] ?? '-').'</td>
+
+            <td>'.htmlspecialchars($p['imaging'] ?? '-').'</td>
+
+            <td>'.htmlspecialchars($p['fees']).'</td>
+
+            <td>'.htmlspecialchars($p['payment_type'] ?? '-').'</td>
+
+            <td>'.htmlspecialchars($ref).'</td>
+
+            <td>'.htmlspecialchars($p['doctor_clinic'] ?? '-').'</td>
+
+            <td>'.htmlspecialchars($p['address'] ?? '-').'</td>
+
+            <td>'.htmlspecialchars($p['doctor_phone'] ?? '-').'</td>
+
+            <td>'.htmlspecialchars($p['note'] ?? '-').'</td>
+
+            <td>'.(!empty($p['cut_clearing_date']) 
+                ? date("d-m-Y", strtotime($p['cut_clearing_date'])) 
+                : '-').'</td>
+
+            <td>'.htmlspecialchars($p['cut_paid_via'] ?? '-').'</td>
+
+            <td>'.htmlspecialchars($p['cut_amount'] ?? '-').'</td>
+
+            <td>
+                <a href="/patient_system_modern/views/patients/view_patient.php?id='.$p['id'].'" 
+                class="btn btn-sm btn-primary">View</a>
+                '.$editBtn.'
+                '.$deleteBtn.'
+            </td>
+        </tr>';
 }
 
 /*
@@ -186,7 +322,7 @@ $content = <<<HTML
     <div class="card-body">
         <div class="table-responsive">
             <table class="table table-sm align-middle">
-                <thead>
+                <!-- <thead>
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
@@ -196,6 +332,28 @@ $content = <<<HTML
                         <th>Referred By</th>
                         <th>Fees</th>
                         <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead> -->
+
+                <thead>
+                    <tr>
+                        <th>S.N</th>
+                        <th>Date</th>
+                        <th>Patient Name</th>
+                        <th>Age/Sex</th>
+                        <th>Receipt No</th>
+                        <th>Imaging</th>
+                        <th>Amount</th>
+                        <th>Payment Type</th>
+                        <th>Referer Doctor/Asha</th>
+                        <th>Doctor's Clinic/Hospital</th>
+                        <th>Address</th>
+                        <th>Doctor's Phone</th>
+                        <th>Note</th>
+                        <th>Cut Clearing Date</th>
+                        <th>Cut Paid via</th>
+                        <th>Cut Amount</th>
                         <th>Action</th>
                     </tr>
                 </thead>
